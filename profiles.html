@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Profiles - Nigeria Youth Society Development</title>
+<meta name="description" content="Meet the remarkable young leaders in the Nigeria Youth Society Development program.">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --green: #008751;
+    --green-dark: #006B3F;
+    --green-light: #00A86B;
+    --gold: #D4A843;
+    --gold-light: #F0D68A;
+    --white: #FFFFFF;
+    --off-white: #F8F9FA;
+    --dark: #1A1A2E;
+    --gray: #6B7280;
+    --gray-light: #E5E7EB;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--dark);
+    line-height: 1.6;
+    background: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* --- NAVIGATION --- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--white);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+    backdrop-filter: blur(10px);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-weight: 800; font-size: 1.1rem;
+    color: var(--green);
+    letter-spacing: -0.5px;
+    text-decoration: none;
+  }
+  .nav-logo img { width: 42px; height: 42px; object-fit: contain; display: block; }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--dark);
+    font-size: 0.9rem; font-weight: 500;
+    transition: color 0.3s; position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 2px; background: var(--gold); transition: width 0.3s;
+  }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-links a.active { color: var(--green); }
+  .hamburger {
+    display: none; cursor: pointer; flex-direction: column; gap: 5px;
+    background: none; border: none; padding: 4px;
+  }
+  .hamburger span {
+    width: 24px; height: 2px; background: var(--dark);
+    transition: all 0.3s; border-radius: 2px;
+  }
+  .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  /* --- HERO BANNER --- */
+  .page-hero {
+    padding: 8rem 2rem 3rem;
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 50%, var(--green-light) 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(212,168,67,0.15) 0%, transparent 50%);
+  }
+  .page-hero > * { position: relative; z-index: 1; }
+  .page-hero .hero-badge {
+    display: inline-block; padding: 0.4rem 1.2rem;
+    border: 1px solid rgba(212,168,67,0.5); border-radius: 50px;
+    color: var(--gold-light); font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem;
+  }
+  .page-hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem); color: var(--white);
+    font-weight: 800; line-height: 1.1; margin-bottom: 0.75rem;
+  }
+  .page-hero p {
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: rgba(255,255,255,0.85); max-width: 550px; margin: 0 auto;
+  }
+
+  /* --- SEARCH SECTION --- */
+  .search-section {
+    padding: 2.5rem 2rem 1rem;
+    background: var(--off-white);
+    border-bottom: 1px solid var(--gray-light);
+  }
+  .search-wrapper {
+    max-width: 600px; margin: 0 auto; position: relative;
+  }
+  .search-wrapper svg {
+    position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%);
+    width: 20px; height: 20px; stroke: var(--gray); pointer-events: none;
+  }
+  .search-input {
+    width: 100%; padding: 1rem 1rem 1rem 3.25rem;
+    border: 2px solid var(--gray-light); border-radius: 14px;
+    font-size: 1rem; color: var(--dark); background: var(--white);
+    transition: all 0.3s ease; outline: none;
+    font-family: inherit;
+  }
+  .search-input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 4px rgba(0,135,81,0.1);
+  }
+  .search-input::placeholder { color: var(--gray); }
+  .results-count {
+    text-align: center; padding: 1rem 2rem 0;
+    font-size: 0.9rem; color: var(--gray); background: var(--off-white);
+  }
+  .results-count strong { color: var(--green); }
+
+  /* --- PROFILES GRID --- */
+  .profiles-section {
+    padding: 3rem 2rem 4rem;
+    background: var(--off-white);
+    min-height: 60vh;
+  }
+  .profiles-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* --- PROFILE CARD --- */
+  .profile-card {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--gray-light);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .profile-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  }
+  .profile-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green), var(--gold));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s ease; z-index: 1;
+  }
+  .profile-card:hover::before { transform: scaleX(1); }
+  .profile-image {
+    width: 100%; aspect-ratio: 1/1; object-fit: cover;
+    display: block; background: var(--gray-light);
+  }
+  .profile-info {
+    padding: 1.25rem;
+  }
+  .profile-name {
+    font-size: 1.05rem; font-weight: 700; color: var(--dark);
+    margin-bottom: 0.25rem;
+  }
+  .profile-title {
+    font-size: 0.8rem; font-weight: 600; color: var(--green);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+  .profile-bio {
+    font-size: 0.85rem; color: var(--gray); line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .profile-tag {
+    display: inline-block; padding: 0.2rem 0.65rem;
+    background: rgba(0,135,81,0.08); color: var(--green);
+    border-radius: 50px; font-size: 0.72rem; font-weight: 600;
+    margin-top: 0.75rem;
+  }
+
+  /* --- NO RESULTS --- */
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center; padding: 4rem 2rem;
+  }
+  .no-results svg {
+    width: 64px; height: 64px; stroke: var(--gray-light); margin-bottom: 1rem;
+  }
+  .no-results h3 {
+    font-size: 1.2rem; color: var(--dark); margin-bottom: 0.5rem;
+  }
+  .no-results p { font-size: 0.9rem; color: var(--gray); }
+
+  /* --- FOOTER --- */
+  footer {
+    background: var(--dark); color: rgba(255,255,255,0.6);
+    padding: 2rem; text-align: center;
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  footer p { font-size: 0.85rem; }
+
+  /* --- ANIMATIONS --- */
+  .profile-card {
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.4s ease forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 768px) {
+    .nav-links {
+      position: fixed; top: 0; right: -100%;
+      width: 70%; height: 100vh;
+      background: var(--white);
+      flex-direction: column; justify-content: center;
+      padding: 2rem;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+      transition: right 0.3s ease; z-index: 999;
+    }
+    .nav-links.open { right: 0; }
+    .nav-links a { color: var(--dark) !important; font-size: 1.1rem; }
+    .hamburger { display: flex; z-index: 1001; }
+    .profiles-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+    .page-hero { padding: 7rem 1.5rem 2.5rem; }
+  }
+  @media (max-width: 480px) {
+    .profiles-grid { grid-template-columns: 1fr; }
+    nav { padding: 0.75rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <a href="nigeria-youth.html" class="nav-logo">
+    <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Coat_of_arms_of_Nigeria.svg" alt="Coat of Arms of Nigeria">
+    Nigeria<span>.</span> Youth
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="nigeria-youth.html">Home</a></li>
+    <li><a href="profiles.html" class="active">Profiles</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Hero Banner -->
+<section class="page-hero">
+  <div class="hero-badge">Our People</div>
+  <h1>Student <span style="color: var(--gold-light)">Profiles</span></h1>
+  <p>Meet the remarkable young leaders driving change across Nigeria through our development programs.</p>
+</section>
+
+<!-- Search -->
+<div class="search-section">
+  <div class="search-wrapper">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+    </svg>
+    <input
+      type="text"
+      class="search-input"
+      id="searchInput"
+      placeholder="Search by name, program, or state..."
+      autocomplete="off"
+    >
+  </div>
+  <div class="results-count" id="resultsCount"></div>
+</div>
+
+<!-- Profiles Grid -->
+<section class="profiles-section">
+  <div class="profiles-grid" id="profilesGrid">
+
+    <!-- ============================================================ -->
+    <!-- STUDENT PROFILES: Replace IMAGE_URL below with your IMDB link -->
+    <!-- Each profile has a data-search attribute for search filtering -->
+    <!-- ============================================================ -->
+
+    <!-- Profile 1 -->
+    <div class="profile-card" data-search="ademola adesanya lagos education scholarship">
+      <img class="profile-image" src="IMAGE_URL" alt="Ademola Adesanya">
+      <div class="profile-info">
+        <div class="profile-name">Ademola Adesanya</div>
+        <div class="profile-title">Education & Scholarships</div>
+        <div class="profile-bio">A passionate advocate for accessible education, leading after-school tutoring programs for underserved communities in Lagos.</div>
+        <span class="profile-tag">Lagos State</span>
+      </div>
+    </div>
+
+    <!-- Profile 2 -->
+    <div class="profile-card" data-search="chidinma okafor abia vocational skills technology">
+      <img class="profile-image" src="IMAGE_URL" alt="Chidinma Okafor">
+      <div class="profile-info">
+        <div class="profile-name">Chidinma Okafor</div>
+        <div class="profile-title">Vocational Skills Training</div>
+        <div class="profile-bio">Tech-savvy and driven, teaching digital skills to young women in Abia State through hands-on workshops.</div>
+        <span class="profile-tag">Abia State</span>
+      </div>
+    </div>
+
+    <!-- Profile 3 -->
+    <div class="profile-card" data-search="ibrahim musa kano community development">
+      <img class="profile-image" src="IMAGE_URL" alt="Ibrahim Musa">
+      <div class="profile-info">
+        <div class="profile-name">Ibrahim Musa</div>
+        <div class="profile-title">Community Development</div>
+        <div class="profile-bio">Organizing grassroots clean-up and health awareness campaigns across Kano's urban communities.</div>
+        <span class="profile-tag">Kano State</span>
+      </div>
+    </div>
+
+    <!-- Profile 4 -->
+    <div class="profile-card" data-search="folake bamidele osun leadership advocacy">
+      <img class="profile-image" src="IMAGE_URL" alt="Folake Bamidele">
+      <div class="profile-info">
+        <div class="profile-name">Folake Bamidele</div>
+        <div class="profile-title">Leadership & Advocacy</div>
+        <div class="profile-bio">A rising voice in youth policy, representing Nigerian youth at regional governance forums.</div>
+        <span class="profile-tag">Osun State</span>
+      </div>
+    </div>
+
+    <!-- Profile 5 -->
+    <div class="profile-card" data-search="emeka nwankwo enugu health wellness">
+      <img class="profile-image" src="IMAGE_URL" alt="Emeka Nwankwo">
+      <div class="profile-info">
+        <div class="profile-name">Emeka Nwankwo</div>
+        <div class="profile-title">Health & Wellness</div>
+        <div class="profile-bio">Promoting mental health awareness and organizing sports outreach for youth in Enugu.</div>
+        <span class="profile-tag">Enugu State</span>
+      </div>
+    </div>
+
+    <!-- Profile 6 -->
+    <div class="profile-card" data-search="aminu bello kaduna digital literacy coding">
+      <img class="profile-image" src="IMAGE_URL" alt="Aminu Bello">
+      <div class="profile-info">
+        <div class="profile-name">Aminu Bello</div>
+        <div class="profile-title">Digital Literacy</div>
+        <div class="profile-bio">Teaching coding and internet safety to secondary school students in Kaduna.</div>
+        <span class="profile-tag">Kaduna State</span>
+      </div>
+    </div>
+
+    <!-- Profile 7 -->
+    <div class="profile-card" data-search="blessing okoro rivers education mentorship">
+      <img class="profile-image" src="IMAGE_URL" alt="Blessing Okoro">
+      <div class="profile-info">
+        <div class="profile-name">Blessing Okoro</div>
+        <div class="profile-title">Education & Scholarships</div>
+        <div class="profile-bio">Mentoring girls in STEM subjects and securing scholarship opportunities across Rivers State.</div>
+        <span class="profile-tag">Rivers State</span>
+      </div>
+    </div>
+
+    <!-- Profile 8 -->
+    <div class="profile-card" data-search="yusuf abdullahi sokoto vocational agriculture">
+      <img class="profile-image" src="IMAGE_URL" alt="Yusuf Abdullahi">
+      <div class="profile-info">
+        <div class="profile-name">Yusuf Abdullahi</div>
+        <div class="profile-title">Vocational Skills Training</div>
+        <div class="profile-bio">Training young farmers in modern agricultural techniques to boost food security in Sokoto.</div>
+        <span class="profile-tag">Sokoto State</span>
+      </div>
+    </div>
+
+    <!-- Profile 9 -->
+    <div class="profile-card" data-search="adaeze anyanwu imo community service civic">
+      <img class="profile-image" src="IMAGE_URL" alt="Adaeze Anyanwu">
+      <div class="profile-info">
+        <div class="profile-name">Adaeze Anyanwu</div>
+        <div class="profile-title">Community Development</div>
+        <div class="profile-bio">Leading civic engagement initiatives and voter education drives in Imo State.</div>
+        <span class="profile-tag">Imo State</span>
+      </div>
+    </div>
+
+    <!-- Profile 10 -->
+    <div class="profile-card" data-search="tunde owolabi ogun leadership conference workshop">
+      <img class="profile-image" src="IMAGE_URL" alt="Tunde Owolabi">
+      <div class="profile-info">
+        <div class="profile-name">Tunde Owolabi</div>
+        <div class="profile-title">Leadership & Advocacy</div>
+        <div class="profile-bio">Organizing youth leadership conferences and debate competitions in Ogun State.</div>
+        <span class="profile-tag">Ogun State</span>
+      </div>
+    </div>
+
+    <!-- Profile 11 -->
+    <div class="profile-card" data-search="halima garba borno health sports outreach">
+      <img class="profile-image" src="IMAGE_URL" alt="Halima Garba">
+      <div class="profile-info">
+        <div class="profile-name">Halima Garba</div>
+        <div class="profile-title">Health & Wellness</div>
+        <div class="profile-bio">Running maternal health awareness programs and sports tournaments for young women in Borno.</div>
+        <span class="profile-tag">Borno State</span>
+      </div>
+    </div>
+
+    <!-- Profile 12 -->
+    <div class="profile-card" data-search="chukwuma eze anambra digital literacy computer">
+      <img class="profile-image" src="IMAGE_URL" alt="Chukwuma Eze">
+      <div class="profile-info">
+        <div class="profile-name">Chukwuma Eze</div>
+        <div class="profile-title">Digital Literacy</div>
+        <div class="profile-bio">Bridging the digital divide by setting up community computer labs in rural Anambra.</div>
+        <span class="profile-tag">Anambra State</span>
+      </div>
+    </div>
+
+    <!-- Profile 13 -->
+    <div class="profile-card" data-search="olamide salisu lagos education academic support">
+      <img class="profile-image" src="IMAGE_URL" alt="Olamide Salisu">
+      <div class="profile-info">
+        <div class="profile-name">Olamide Salisu</div>
+        <div class="profile-title">Education & Scholarships</div>
+        <div class="profile-bio">Providing free JAMB preparation classes and academic mentoring to students in Lagos.</div>
+        <span class="profile-tag">Lagos State</span>
+      </div>
+    </div>
+
+    <!-- Profile 14 -->
+    <div class="profile-card" data-search="fatima ibrahim katsina vocational crafts entrepreneurship">
+      <img class="profile-image" src="IMAGE_URL" alt="Fatima Ibrahim">
+      <div class="profile-info">
+        <div class="profile-name">Fatima Ibrahim</div>
+        <div class="profile-title">Vocational Skills Training</div>
+        <div class="profile-bio">Empowering women with tailoring and crafts skills for economic independence in Katsina.</div>
+        <span class="profile-tag">Katsina State</span>
+      </div>
+    </div>
+
+    <!-- Profile 15 -->
+    <div class="profile-card" data-search="daniel okon cross river community environment">
+      <img class="profile-image" src="IMAGE_URL" alt="Daniel Okon">
+      <div class="profile-info">
+        <div class="profile-name">Daniel Okon</div>
+        <div class="profile-title">Community Development</div>
+        <div class="profile-bio">Championing environmental sustainability and tree-planting campaigns in Cross River State.</div>
+        <span class="profile-tag">Cross River State</span>
+      </div>
+    </div>
+
+    <!-- Profile 16 -->
+    <div class="profile-card" data-search="chioma ugwu ebonyi leadership youth parliament">
+      <img class="profile-image" src="IMAGE_URL" alt="Chioma Ugwu">
+      <div class="profile-info">
+        <div class="profile-name">Chioma Ugwu</div>
+        <div class="profile-title">Leadership & Advocacy</div>
+        <div class="profile-bio">Founder of a local youth parliament addressing governance issues in Ebonyi State.</div>
+        <span class="profile-tag">Ebonyi State</span>
+      </div>
+    </div>
+
+    <!-- Profile 17 -->
+    <div class="profile-card" data-search="abdulkarim bayero plateau health mental awareness">
+      <img class="profile-image" src="IMAGE_URL" alt="Abdulkarim Bayero">
+      <div class="profile-info">
+        <div class="profile-name">Abdulkarim Bayero</div>
+        <div class="profile-title">Health & Wellness</div>
+        <div class="profile-bio">Breaking the stigma around mental health through awareness walks and counseling in Plateau.</div>
+        <span class="profile-tag">Plateau State</span>
+      </div>
+    </div>
+
+    <!-- Profile 18 -->
+    <div class="profile-card" data-search="temilayo adeyemi oyo digital literacy robotics">
+      <img class="profile-image" src="IMAGE_URL" alt="Temilayo Adeyemi">
+      <div class="profile-info">
+        <div class="profile-name">Temilayo Adeyemi</div>
+        <div class="profile-title">Digital Literacy</div>
+        <div class="profile-bio">Introducing robotics and basic programming to secondary school students in Oyo State.</div>
+        <span class="profile-tag">Oyo State</span>
+      </div>
+    </div>
+
+    <!-- Profile 19 -->
+    <div class="profile-card" data-search="sani abubakar niger education scholarship rural">
+      <img class="profile-image" src="IMAGE_URL" alt="Sani Abubakar">
+      <div class="profile-info">
+        <div class="profile-name">Sani Abubakar</div>
+        <div class="profile-title">Education & Scholarships</div>
+        <div class="profile-bio">Securing scholarship funding for out-of-school children in rural Niger State communities.</div>
+        <span class="profile-tag">Niger State</span>
+      </div>
+    </div>
+
+    <!-- Profile 20 -->
+    <div class="profile-card" data-search="nneka obi benue vocational skills agriculture">
+      <img class="profile-image" src="IMAGE_URL" alt="Nneka Obi">
+      <div class="profile-info">
+        <div class="profile-name">Nneka Obi</div>
+        <div class="profile-title">Vocational Skills Training</div>
+        <div class="profile-bio">Running agribusiness incubators for young entrepreneurs in Benue State.</div>
+        <span class="profile-tag">Benue State</span>
+      </div>
+    </div>
+
+    <!-- Profile 21 -->
+    <div class="profile-card" data-search="kabiru usman jigawa community water sanitation">
+      <img class="profile-image" src="IMAGE_URL" alt="Kabiru Usman">
+      <div class="profile-info">
+        <div class="profile-name">Kabiru Usman</div>
+        <div class="profile-title">Community Development</div>
+        <div class="profile-bio">Leading WASH (Water, Sanitation, and Hygiene) projects in underserved Jigawa communities.</div>
+        <span class="profile-tag">Jigawa State</span>
+      </div>
+    </div>
+
+    <!-- Profile 22 -->
+    <div class="profile-card" data-search="bukola famuyiwa edo leadership policy engagement">
+      <img class="profile-image" src="IMAGE_URL" alt="Bukola Famuyiwa">
+      <div class="profile-info">
+        <div class="profile-name">Bukola Famuyiwa</div>
+        <div class="profile-title">Leadership & Advocacy</div>
+        <div class="profile-bio">Engaging policymakers on youth employment and skills development in Edo State.</div>
+        <span class="profile-tag">Edo State</span>
+      </div>
+    </div>
+
+    <!-- Profile 23 -->
+    <div class="profile-card" data-search="mustapha ali gombe health nutrition children">
+      <img class="profile-image" src="IMAGE_URL" alt="Mustapha Ali">
+      <div class="profile-info">
+        <div class="profile-name">Mustapha Ali</div>
+        <div class="profile-title">Health & Wellness</div>
+        <div class="profile-bio">Running childhood nutrition programs and health screenings in Gombe State.</div>
+        <span class="profile-tag">Gombe State</span>
+      </div>
+    </div>
+
+    <!-- Profile 24 -->
+    <div class="profile-card" data-search="chinonyerem uka akwa ibom digital literacy internet safety">
+      <img class="profile-image" src="IMAGE_URL" alt="Chinonyerem Uka">
+      <div class="profile-info">
+        <div class="profile-name">Chinonyerem Uka</div>
+        <div class="profile-title">Digital Literacy</div>
+        <div class="profile-bio">Teaching safe internet practices and online entrepreneurship to youth in Akwa Ibom.</div>
+        <span class="profile-tag">Akwa Ibom State</span>
+      </div>
+    </div>
+
+    <!-- Profile 25 -->
+    <div class="profile-card" data-search="rafiat yusuf kwara education girls stem">
+      <img class="profile-image" src="IMAGE_URL" alt="Rafiat Yusuf">
+      <div class="profile-info">
+        <div class="profile-name">Rafiat Yusuf</div>
+        <div class="profile-title">Education & Scholarships</div>
+        <div class="profile-bio">Advocating for girls' enrollment in STEM programs across Kwara State schools.</div>
+        <span class="profile-tag">Kwara State</span>
+      </div>
+    </div>
+
+    <!-- Profile 26 -->
+    <div class="profile-card" data-search="godswill effiong bayelsa vocational fishing maritime">
+      <img class="profile-image" src="IMAGE_URL" alt="Godswill Effiong">
+      <div class="profile-info">
+        <div class="profile-name">Godswill Effiong</div>
+        <div class="profile-title">Vocational Skills Training</div>
+        <div class="profile-bio">Training coastal youth in sustainable fishing and maritime skills in Bayelsa State.</div>
+        <span class="profile-tag">Bayelsa State</span>
+      </div>
+    </div>
+
+    <!-- Profile 27 -->
+    <div class="profile-card" data-search="hauwa musa zamfara community women empowerment">
+      <img class="profile-image" src="IMAGE_URL" alt="Hauwa Musa">
+      <div class="profile-info">
+        <div class="profile-name">Hauwa Musa</div>
+        <div class="profile-title">Community Development</div>
+        <div class="profile-bio">Building women's cooperatives and community savings groups in Zamfara State.</div>
+        <span class="profile-tag">Zamfara State</span>
+      </div>
+    </div>
+
+    <!-- Profile 28 -->
+    <div class="profile-card" data-search="ayodele fashola delta leadership governance accountability">
+      <img class="profile-image" src="IMAGE_URL" alt="Ayodele Fashola">
+      <div class="profile-info">
+        <div class="profile-name">Ayodele Fashola</div>
+        <div class="profile-title">Leadership & Advocacy</div>
+        <div class="profile-bio">Promoting governance accountability and anti-corruption campaigns among Delta youth.</div>
+        <span class="profile-tag">Delta State</span>
+      </div>
+    </div>
+
+    <!-- Profile 29 -->
+    <div class="profile-card" data-search="khadijat abubakar kebbi health reproductive education">
+      <img class="profile-image" src="IMAGE_URL" alt="Khadijat Abubakar">
+      <div class="profile-info">
+        <div class="profile-name">Khadijat Abubakar</div>
+        <div class="profile-title">Health & Wellness</div>
+        <div class="profile-bio">Providing reproductive health education and counseling services to young women in Kebbi.</div>
+        <span class="profile-tag">Kebbi State</span>
+      </div>
+    </div>
+
+    <!-- Profile 30 -->
+    <div class="profile-card" data-search="obioma nwafor nasarawa digital literacy mobile apps">
+      <img class="profile-image" src="IMAGE_URL" alt="Obioma Nwafor">
+      <div class="profile-info">
+        <div class="profile-name">Obioma Nwafor</div>
+        <div class="profile-title">Digital Literacy</div>
+        <div class="profile-bio">Teaching mobile app development to university students in Nasarawa State.</div>
+        <span class="profile-tag">Nasarawa State</span>
+      </div>
+    </div>
+
+    <!-- Profile 31 -->
+    <div class="profile-card" data-search="segun alabi ekiti education library books">
+      <img class="profile-image" src="IMAGE_URL" alt="Segun Alabi">
+      <div class="profile-info">
+        <div class="profile-name">Segun Alabi</div>
+        <div class="profile-title">Education & Scholarships</div>
+        <div class="profile-bio">Establishing community libraries and book donation drives across Ekiti State.</div>
+        <span class="profile-tag">Ekiti State</span>
+      </div>
+    </div>
+
+    <!-- Profile 32 -->
+    <div class="profile-card" data-search="asabe mohammed yobe vocational tie dye fashion">
+      <img class="profile-image" src="IMAGE_URL" alt="Asabe Mohammed">
+      <div class="profile-info">
+        <div class="profile-name">Asabe Mohammed</div>
+        <div class="profile-title">Vocational Skills Training</div>
+        <div class="profile-bio">Teaching tie-dye and fashion design skills to young women in Yobe State.</div>
+        <span class="profile-tag">Yobe State</span>
+      </div>
+    </div>
+
+    <!-- Profile 33 -->
+    <div class="profile-card" data-search="chinedu igwe taraba community conflict resolution">
+      <img class="profile-image" src="IMAGE_URL" alt="Chinedu Igwe">
+      <div class="profile-info">
+        <div class="profile-name">Chinedu Igwe</div>
+        <div class="profile-title">Community Development</div>
+        <div class="profile-bio">Facilitating peace-building and conflict resolution workshops in Taraba State.</div>
+        <span class="profile-tag">Taraba State</span>
+      </div>
+    </div>
+
+    <!-- Profile 34 -->
+    <div class="profile-card" data-search="tope williams abuja leadership policy research">
+      <img class="profile-image" src="IMAGE_URL" alt="Tope Williams">
+      <div class="profile-info">
+        <div class="profile-name">Tope Williams</div>
+        <div class="profile-title">Leadership & Advocacy</div>
+        <div class="profile-bio">Conducting youth policy research and presenting findings at national forums in Abuja.</div>
+        <span class="profile-tag">FCT Abuja</span>
+      </div>
+    </div>
+
+    <!-- Profile 35 -->
+    <div class="profile-card" data-search="aminata sokoto kogi health malaria prevention">
+      <img class="profile-image" src="IMAGE_URL" alt="Aminata Sule">
+      <div class="profile-info">
+        <div class="profile-name">Aminata Sule</div>
+        <div class="profile-title">Health & Wellness</div>
+        <div class="profile-bio">Leading malaria prevention campaigns and distributing mosquito nets in Kogi State.</div>
+        <span class="profile-tag">Kogi State</span>
+      </div>
+    </div>
+
+    <!-- Profile 36 -->
+    <div class="profile-card" data-search="damilola ogunleye ogun digital literacy graphic design">
+      <img class="profile-image" src="IMAGE_URL" alt="Damilola Ogunleye">
+      <div class="profile-info">
+        <div class="profile-name">Damilola Ogunleye</div>
+        <div class="profile-title">Digital Literacy</div>
+        <div class="profile-bio">Teaching graphic design and social media marketing to aspiring creatives in Ogun State.</div>
+        <span class="profile-tag">Ogun State</span>
+      </div>
+    </div>
+
+    <!-- Profile 37 -->
+    <div class="profile-card" data-search="umar faruk adamawa education refugee schools">
+      <img class="profile-image" src="IMAGE_URL" alt="Umar Faruk">
+      <div class="profile-info">
+        <div class="profile-name">Umar Faruk</div>
+        <div class="profile-title">Education & Scholarships</div>
+        <div class="profile-bio">Setting up makeshift schools and learning centers for displaced children in Adamawa.</div>
+        <span class="profile-tag">Adamawa State</span>
+      </div>
+    </div>
+
+    <!-- Profile 38 -->
+    <div class="profile-card" data-search="ifeoma chukwu imo vocational catering hospitality">
+      <img class="profile-image" src="IMAGE_URL" alt="Ifeoma Chukwu">
+      <div class="profile-info">
+        <div class="profile-name">Ifeoma Chukwu</div>
+        <div class="profile-title">Vocational Skills Training</div>
+        <div class="profile-bio">Training youth in catering and hospitality management for employment in Imo State.</div>
+        <span class="profile-tag">Imo State</span>
+      </div>
+    </div>
+
+    <!-- Profile 39 -->
+    <div class="profile-card" data-search="bello tukur bauchi community infrastructure roads">
+      <img class="profile-image" src="IMAGE_URL" alt="Bello Tukur">
+      <div class="profile-info">
+        <div class="profile-name">Bello Tukur</div>
+        <div class="profile-title">Community Development</div>
+        <div class="profile-bio">Mobilizing youth for community infrastructure projects and road maintenance in Bauchi.</div>
+        <span class="profile-tag">Bauchi State</span>
+      </div>
+    </div>
+
+    <!-- Profile 40 -->
+    <div class="profile-card" data-search="arike ogundimu lagos leadership debate public speaking">
+      <img class="profile-image" src="IMAGE_URL" alt="Arike Ogundimu">
+      <div class="profile-info">
+        <div class="profile-name">Arike Ogundimu</div>
+        <div class="profile-title">Leadership & Advocacy</div>
+        <div class="profile-bio">Coaching public speaking and debate skills to prepare youth for national competitions.</div>
+        <span class="profile-tag">Lagos State</span>
+      </div>
+    </div>
+
+    <!-- Profile 41 -->
+    <div class="profile-card" data-search="aliyu garba niger health hiv aids awareness">
+      <img class="profile-image" src="IMAGE_URL" alt="Aliyu Garba">
+      <div class="profile-info">
+        <div class="profile-name">Aliyu Garba</div>
+        <div class="profile-title">Health & Wellness</div>
+        <div class="profile-bio">Running HIV/AIDS awareness and testing campaigns among youth in Niger State.</div>
+        <span class="profile-tag">Niger State</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 Nigeria Youth Society Development. All rights reserved. | <a href="nigeria-youth.html">Back to Home</a></p>
+</footer>
+
+<script>
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+    document.getElementById('hamburger').classList.toggle('active');
+  }
+
+  // Search functionality
+  const searchInput = document.getElementById('searchInput');
+  const profilesGrid = document.getElementById('profilesGrid');
+  const resultsCount = document.getElementById('resultsCount');
+  const allCards = Array.from(profilesGrid.querySelectorAll('.profile-card'));
+  const totalProfiles = allCards.length;
+
+  function updateResults() {
+    const query = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    // Remove existing no-results message
+    const existingNoResults = profilesGrid.querySelector('.no-results');
+    if (existingNoResults) existingNoResults.remove();
+
+    if (!query) {
+      allCards.forEach(card => {
+        card.style.display = '';
+        card.style.animationDelay = '0s';
+      });
+      resultsCount.innerHTML = `Showing all <strong>${totalProfiles}</strong> profiles`;
+      return;
+    }
+
+    allCards.forEach((card, index) => {
+      const searchData = card.getAttribute('data-search').toLowerCase();
+      const name = card.querySelector('.profile-name').textContent.toLowerCase();
+      const bio = card.querySelector('.profile-bio').textContent.toLowerCase();
+      const title = card.querySelector('.profile-title').textContent.toLowerCase();
+      const tag = card.querySelector('.profile-tag').textContent.toLowerCase();
+
+      const match = searchData.includes(query) || name.includes(query) ||
+                    bio.includes(query) || title.includes(query) || tag.includes(query);
+
+      if (match) {
+        card.style.display = '';
+        card.style.animationDelay = `${visibleCount * 0.05}s`;
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (visibleCount === 0) {
+      const noResults = document.createElement('div');
+      noResults.className = 'no-results';
+      noResults.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          <path d="M8 11h6"/>
+        </svg>
+        <h3>No profiles found</h3>
+        <p>Try searching with a different name, program, or state.</p>
+      `;
+      profilesGrid.appendChild(noResults);
+    }
+
+    resultsCount.innerHTML = `Showing <strong>${visibleCount}</strong> of <strong>${totalProfiles}</strong> profiles`;
+  }
+
+  searchInput.addEventListener('input', updateResults);
+  updateResults(); // Initialize
+</script>
+
+</body>
+</html>
